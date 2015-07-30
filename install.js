@@ -105,7 +105,9 @@ whichDeferred.promise
     tmpPath = findSuitableTempDirectory(conf)
 
     // Can't use a global version so start a download.
-    if (process.platform === 'linux' && process.arch === 'x64') {
+    if (process.env.TRAVIS) {
+      downloadUrl = 'https://s3.amazonaws.com/travis-phantomjs/phantomjs-2.0.0-ubuntu-12.04.tar.bz2';
+    } else if (process.platform === 'linux' && process.arch === 'x64') {
       downloadUrl += 'linux-x86_64.zip'
     } else if (process.platform === 'darwin' || process.platform === 'openbsd' || process.platform === 'freebsd') {
       downloadUrl += 'macosx.zip'
@@ -137,6 +139,9 @@ whichDeferred.promise
     var location = process.platform === 'win32' ?
         path.join(pkgPath, 'phantomjs.exe') :
         path.join(pkgPath, 'bin' ,'phantomjs')
+    if (process.env.TRAVIS) {
+      location = path.join(pkgPath, 'phantomjs');
+    }
     var relativeLocation = path.relative(libPath, location)
     writeLocationFile(relativeLocation)
 
@@ -324,6 +329,9 @@ function extractDownload(filePath) {
 function copyIntoPlace(extractedPath, targetPath) {
   console.log('Removing', targetPath)
   return kew.nfcall(rimraf, targetPath).then(function () {
+    if (process.env.TRAVIS) {
+      return kew.nfcall(ncp, extractedPath, targetPath);
+    }
     // Look for the extracted directory, so we can rename it.
     var files = fs.readdirSync(extractedPath)
     for (var i = 0; i < files.length; i++) {
