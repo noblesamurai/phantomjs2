@@ -108,7 +108,7 @@ whichDeferred.promise
     if (process.env.TRAVIS) {
       downloadUrl = 'https://s3.amazonaws.com/travis-phantomjs/phantomjs-2.0.0-ubuntu-12.04.tar.bz2';
     } else if (process.platform === 'linux' && process.arch === 'x64') {
-      downloadUrl += 'linux-x86_64.zip'
+      downloadUrl += 'u1404-x86_64.zip'
     } else if (process.platform === 'darwin' || process.platform === 'openbsd' || process.platform === 'freebsd') {
       downloadUrl += 'macosx.zip'
     } else {
